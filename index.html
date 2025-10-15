@@ -366,7 +366,7 @@ lerBtn.addEventListener('click', async () => {
             const code = jsQR(imageData.data, canvas.width, canvas.height);
             if (code) {
                 const isPix = code.data.startsWith('00020126') && code.data.includes('BR.GOV.BCB.PIX');
-                decodedText.textContent = isPix ? "✅ PIX BR Code LIDO! Conteúdo: " + code.data : "🔗 Conteúdo: " + code.data;
+                decodedText.textContent = isPix ? "✅ PIX BR Code LIDO! Conteúdo: " + code.data : code.data;
                 decodedText.style.color = "var(--success-color)";
             } else {
                 decodedText.textContent = "❌ Nenhum QR Code detectado.";
