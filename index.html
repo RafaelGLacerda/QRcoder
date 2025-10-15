@@ -1,241 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="logo.png" type="image/png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Pro - Gerar e Ler</title>
+<meta charset="UTF-8">
+<link rel="icon" href="logo.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Pro - Gerar e Ler</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
-    <style>
-        :root {
-            --primary-color: #5B6DEE;
-            --secondary-color: #3f51b5; 
-            --success-color: #28a745;
-            --text-color-light: #f0f4f8; 
-        }
-
-        [data-theme="light"] {
-            --background-color: #f0f4f8;
-            --card-background: #ffffff;
-            --text-color: #333333;
-            --input-border: #ddd;
-            --placeholder-color: #999;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --dashed-border: #cccccc;
-        }
-
-        [data-theme="dark"] {
-            --background-color: #1a1a2e;
-            --card-background: #232946;
-            --text-color: var(--text-color-light);
-            --input-border: #4f5a89;
-            --placeholder-color: #a0a8c2;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            --dashed-border: #4f5a89;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
-
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background-color: var(--card-background);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 480px;
-            text-align: center;
-            position: relative;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            font-size: 2em;
-            font-weight: 700;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 25px;
-            gap: 10px;
-        }
-
-        .tab-btn {
-            background: none;
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 10px 18px;
-            color: var(--primary-color);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            background-color: var(--primary-color);
-            color: var(--text-color-light);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        #link-input, #file-input {
-            padding: 12px;
-            border: 2px solid var(--input-border);
-            border-radius: 8px;
-            font-size: 1em;
-            width: 100%;
-            background-color: var(--card-background);
-            color: var(--text-color);
-        }
-
-        #link-input::placeholder {
-            color: var(--placeholder-color);
-        }
-
-        #gerar-btn, #ler-btn {
-            background-color: var(--primary-color);
-            color: var(--text-color-light);
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        #gerar-btn:hover, #ler-btn:hover {
-            background-color: var(--secondary-color);
-        }
-
-        #download-btn {
-            background-color: var(--success-color);
-            color: var(--text-color-light);
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            display: none;
-        }
-
-        #download-btn:hover {
-            background-color: #1e7e34;
-        }
-
-        .qrcode-area, .reader-area {
-            border: 1px dashed var(--dashed-border);
-            border-radius: 10px;
-            padding: 20px;
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .placeholder-text {
-            color: var(--placeholder-color);
-            font-style: italic;
-        }
-
-        .theme-toggle-container {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-
-        .theme-switch {
-            display: inline-block;
-            height: 20px;
-            position: relative;
-            width: 40px;
-        }
-
-        .theme-switch input {
-            display: none;
-        }
-
-        .slider {
-            background-color: #ccc;
-            bottom: 0;
-            cursor: pointer;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: 0.4s;
-        }
-
-        .slider:before {
-            background-color: #fff;
-            bottom: 3px;
-            content: "";
-            height: 14px;
-            left: 3px;
-            position: absolute;
-            width: 14px;
-            transition: 0.4s;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;
-        }
-
-        @media (max-width: 500px) {
-            .container {
-                margin: 20px;
-                padding: 30px 20px;
-            }
-            h1 { font-size: 1.6em; }
-        }
-    </style>
+<style>
+:root {
+    --primary-color: #5B6DEE;
+    --secondary-color: #3f51b5; 
+    --success-color: #28a745;
+    --error-color: tomato;
+    --text-color-light: #f0f4f8; 
+}
+[data-theme="light"] {
+    --background-color: #f0f4f8;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --input-border: #ddd;
+    --placeholder-color: #999;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --dashed-border: #cccccc;
+}
+[data-theme="dark"] {
+    --background-color: #1a1a2e;
+    --card-background: #232946;
+    --text-color: var(--text-color-light);
+    --input-border: #4f5a89;
+    --placeholder-color: #a0a8c2;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    --dashed-border: #4f5a89;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+body { background-color: var(--background-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.container { background-color: var(--card-background); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); width: 100%; max-width: 480px; text-align: center; position: relative; }
+h1 { color: var(--primary-color); margin-bottom: 25px; font-size: 2em; font-weight: 700; }
+.tabs { display: flex; justify-content: center; margin-bottom: 25px; gap: 10px; }
+.tab-btn { background: none; border: 2px solid var(--primary-color); border-radius: 8px; padding: 10px 18px; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.tab-btn.active { background-color: var(--primary-color); color: var(--text-color-light); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.input-group { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+#link-input, #file-input { padding: 12px; border: 2px solid var(--input-border); border-radius: 8px; font-size: 1em; width: 100%; background-color: var(--card-background); color: var(--text-color); }
+#link-input::placeholder { color: var(--placeholder-color); }
+#gerar-btn, #ler-btn { background-color: var(--primary-color); color: var(--text-color-light); padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: 600; transition: background-color 0.3s, transform 0.1s; }
+#gerar-btn:hover, #ler-btn:hover { background-color: var(--secondary-color); }
+#error-msg { color: var(--error-color); margin-bottom: 10px; display: none; font-weight: 600; }
+#download-btn { background-color: var(--success-color); color: var(--text-color-light); padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; }
+#download-btn:hover { background-color: #1e7e34; }
+.qrcode-area, .reader-area { border: 1px dashed var(--dashed-border); border-radius: 10px; padding: 20px; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
+.placeholder-text { color: var(--placeholder-color); font-style: italic; }
+.theme-toggle-container { position: absolute; top: 15px; right: 15px; }
+.theme-switch { display: inline-block; height: 20px; position: relative; width: 40px; }
+.theme-switch input { display: none; }
+.slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: 0.4s; }
+.slider:before { background-color: #fff; bottom: 3px; content: ""; height: 14px; left: 3px; position: absolute; width: 14px; transition: 0.4s; }
+input:checked + .slider { background-color: var(--primary-color); }
+input:checked + .slider:before { transform: translateX(20px); }
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+@media (max-width: 500px) { .container { margin: 20px; padding: 30px 20px; } h1 { font-size: 1.6em; } }
+</style>
 </head>
 <body>
 
@@ -258,6 +88,7 @@
     <div class="tab-content active" id="tab-gerar">
         <div class="input-group">
             <input type="url" id="link-input" placeholder="Cole seu link (URL) aqui...">
+            <p id="error-msg-gerar" class="error-msg"></p>
             <button id="gerar-btn">Gerar QR Code</button>
         </div>
         <div class="qrcode-area">
@@ -272,6 +103,7 @@
     <div class="tab-content" id="tab-ler">
         <div class="input-group">
             <input type="file" id="file-input" accept="image/*">
+            <p id="error-msg-ler" class="error-msg"></p>
             <button id="ler-btn">Ler QR Code</button>
         </div>
         <div class="reader-area">
@@ -282,91 +114,108 @@
 </div>
 
 <script>
-    const htmlEl = document.documentElement;
-    const themeToggle = document.getElementById('checkbox');
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        htmlEl.setAttribute('data-theme', savedTheme);
-        themeToggle.checked = savedTheme === 'dark';
-    }
-    themeToggle.addEventListener('change', () => {
-        const theme = themeToggle.checked ? 'dark' : 'light';
-        htmlEl.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
+const htmlEl = document.documentElement;
+const themeToggle = document.getElementById('checkbox');
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    htmlEl.setAttribute('data-theme', savedTheme);
+    themeToggle.checked = savedTheme === 'dark';
+}
+themeToggle.addEventListener('change', () => {
+    const theme = themeToggle.checked ? 'dark' : 'light';
+    htmlEl.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+});
+
+// Tabs
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
     });
+});
 
-    // Tabs
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-        });
-    });
+// Gerar QR Code
+const inputLink = document.getElementById('link-input');
+const gerarBtn = document.getElementById('gerar-btn');
+const qrCodeDiv = document.getElementById('qrcode');
+const downloadBtn = document.getElementById('download-btn');
+const errorGerar = document.getElementById('error-msg-gerar');
 
-    // Gerar QR Code
-    const inputLink = document.getElementById('link-input');
-    const gerarBtn = document.getElementById('gerar-btn');
-    const qrCodeDiv = document.getElementById('qrcode');
-    const downloadBtn = document.getElementById('download-btn');
-
-    function gerarQRCode() {
-        const link = inputLink.value.trim();
-        if (!link) return alert("Insira um link válido!");
-        qrCodeDiv.innerHTML = "";
-        new QRCode(qrCodeDiv, { text: link, width: 256, height: 256 });
-        setTimeout(() => downloadBtn.style.display = 'block', 100);
+function gerarQRCode() {
+    const link = inputLink.value.trim();
+    if (!link) {
+        errorGerar.textContent = "❌ Insira um link válido!";
+        errorGerar.style.display = 'block';
+        return;
     }
+    errorGerar.style.display = 'none';
+    qrCodeDiv.innerHTML = "";
+    new QRCode(qrCodeDiv, { text: link, width: 256, height: 256 });
+    setTimeout(() => downloadBtn.style.display = 'block', 100);
+}
 
-    function downloadQRCode() {
-        const canvas = qrCodeDiv.querySelector('canvas');
-        if (!canvas) return alert("Gere o QR Code primeiro.");
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL("image/png");
-        a.download = 'qrcode.png';
-        a.click();
+function downloadQRCode() {
+    const canvas = qrCodeDiv.querySelector('canvas');
+    if (!canvas) {
+        errorGerar.textContent = "❌ Gere o QR Code primeiro.";
+        errorGerar.style.display = 'block';
+        return;
     }
+    errorGerar.style.display = 'none';
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL("image/png");
+    a.download = 'qrcode.png';
+    a.click();
+}
 
-    gerarBtn.addEventListener('click', gerarQRCode);
-    inputLink.addEventListener('keydown', e => { if (e.key === 'Enter') gerarQRCode(); });
+gerarBtn.addEventListener('click', gerarQRCode);
+inputLink.addEventListener('keydown', e => { if (e.key === 'Enter') gerarQRCode(); });
 
-    // Ler QR Code
-    const fileInput = document.getElementById('file-input');
-    const lerBtn = document.getElementById('ler-btn');
-    const previewImg = document.getElementById('preview-img');
-    const decodedText = document.getElementById('decoded-text');
+// Ler QR Code
+const fileInput = document.getElementById('file-input');
+const lerBtn = document.getElementById('ler-btn');
+const previewImg = document.getElementById('preview-img');
+const decodedText = document.getElementById('decoded-text');
+const errorLer = document.getElementById('error-msg-ler');
 
-    lerBtn.addEventListener('click', async () => {
-        const file = fileInput.files[0];
-        if (!file) return alert("Selecione uma imagem com QR Code.");
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                previewImg.src = e.target.result;
-                previewImg.style.display = 'block';
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, canvas.width, canvas.height);
-                if (code) {
-                    decodedText.textContent = "🔗 " + code.data;
-                    decodedText.style.color = "var(--success-color)";
-                } else {
-                    decodedText.textContent = "❌ Nenhum QR Code detectado.";
-                    decodedText.style.color = "tomato";
-                }
-            };
-            img.src = e.target.result;
+lerBtn.addEventListener('click', async () => {
+    const file = fileInput.files[0];
+    if (!file) {
+        errorLer.textContent = "❌ Selecione uma imagem com QR Code.";
+        errorLer.style.display = 'block';
+        return;
+    }
+    errorLer.style.display = 'none';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height);
+            if (code) {
+                decodedText.textContent = "🔗 " + code.data;
+                decodedText.style.color = "var(--success-color)";
+            } else {
+                decodedText.textContent = "❌ Nenhum QR Code detectado.";
+                decodedText.style.color = "tomato";
+            }
         };
-        reader.readAsDataURL(file);
-    });
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+});
 </script>
 </body>
 </html>
