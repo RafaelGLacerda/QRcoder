@@ -205,7 +205,7 @@ lerBtn.addEventListener('click', async () => {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const code = jsQR(imageData.data, canvas.width, canvas.height);
             if (code) {
-                decodedText.textContent = "🔗 " + code.data;
+                decodedText.textContent = code.data;
                 decodedText.style.color = "var(--success-color)";
             } else {
                 decodedText.textContent = "❌ Nenhum QR Code detectado.";
