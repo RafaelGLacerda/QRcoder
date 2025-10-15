@@ -1,26 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light"> <head>
+<html lang="pt-BR" data-theme="light">
+<head>
     <meta charset="UTF-8">
     <link rel="icon" href="logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de QR Code Pro</title>
-    
+    <title>QR Code Pro - Gerar e Ler</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <style>
-        /* ----------------------------------------------------- */
-        /* VARIÁVEIS DE TEMA (DARK/LIGHT) */
-        /* ----------------------------------------------------- */
         :root {
-            /* Cores Comuns */
             --primary-color: #5B6DEE;
             --secondary-color: #3f51b5; 
             --success-color: #28a745;
             --text-color-light: #f0f4f8; 
         }
 
-        /* LIGHT MODE (Padrão) */
         [data-theme="light"] {
             --background-color: #f0f4f8;
             --card-background: #ffffff;
@@ -31,7 +28,6 @@
             --dashed-border: #cccccc;
         }
 
-        /* DARK MODE */
         [data-theme="dark"] {
             --background-color: #1a1a2e;
             --card-background: #232946;
@@ -42,9 +38,6 @@
             --dashed-border: #4f5a89;
         }
 
-        /* ----------------------------------------------------- */
-        /* ESTILOS GERAIS */
-        /* ----------------------------------------------------- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -68,19 +61,49 @@
             border-radius: 12px;
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             text-align: center;
-            position: relative; /* Para posicionar o toggle */
+            position: relative;
         }
 
         h1 {
             color: var(--primary-color);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 2em;
             font-weight: 700;
         }
 
-        /* Input Group */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 10px 18px;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .input-group {
             display: flex;
             flex-direction: column;
@@ -88,7 +111,7 @@
             margin-bottom: 25px;
         }
 
-        #link-input {
+        #link-input, #file-input {
             padding: 12px;
             border: 2px solid var(--input-border);
             border-radius: 8px;
@@ -102,16 +125,10 @@
             color: var(--placeholder-color);
         }
 
-        #link-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        /* Botões */
-        #gerar-btn {
+        #gerar-btn, #ler-btn {
             background-color: var(--primary-color);
             color: var(--text-color-light);
-            padding: 12px 20px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -120,65 +137,48 @@
             transition: background-color 0.3s, transform 0.1s;
         }
 
-        #gerar-btn:hover {
+        #gerar-btn:hover, #ler-btn:hover {
             background-color: var(--secondary-color);
         }
 
-        #gerar-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Área de Exibição do QR Code */
-        .qrcode-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px dashed var(--dashed-border);
-            border-radius: 10px;
-            min-height: 250px;
-        }
-        
-        #qrcode {
-            margin: 10px auto; 
-            max-width: 100%;
-        }
-
-        .placeholder-text {
-            color: var(--placeholder-color);
-            font-style: italic;
-            padding-top: 50px;
-        }
-
         #download-btn {
-            background-color: var(--success-color); 
+            background-color: var(--success-color);
             color: var(--text-color-light);
             padding: 10px 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1em;
             font-weight: 600;
-            transition: background-color 0.3s;
-            display: none; 
+            display: none;
         }
 
         #download-btn:hover {
             background-color: #1e7e34;
         }
 
-        /* ----------------------------------------------------- */
-        /* ESTILOS DO TOGGLE DE TEMA */
-        /* ----------------------------------------------------- */
+        .qrcode-area, .reader-area {
+            border: 1px dashed var(--dashed-border);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .placeholder-text {
+            color: var(--placeholder-color);
+            font-style: italic;
+        }
+
         .theme-toggle-container {
             position: absolute;
             top: 15px;
             right: 15px;
         }
 
-        /* Estilo da Chave de Switch (base CSS puro) */
         .theme-switch {
             display: inline-block;
             height: 20px;
@@ -228,146 +228,145 @@
             border-radius: 50%;
         }
 
-        /* Responsividade */
         @media (max-width: 500px) {
             .container {
                 margin: 20px;
                 padding: 30px 20px;
             }
-            h1 {
-                font-size: 1.6em;
-            }
-            .theme-toggle-container {
-                top: 10px;
-                right: 10px;
-            }
+            h1 { font-size: 1.6em; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        
-        <div class="theme-toggle-container">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox">
-                <div class="slider round"></div>
-            </label>
-        </div>
+<div class="container">
+    <div class="theme-toggle-container">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox">
+            <div class="slider round"></div>
+        </label>
+    </div>
 
-        <h1>QR Code Generator</h1>
+    <h1>QR Code Pro</h1>
 
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="gerar">Gerar</button>
+        <button class="tab-btn" data-tab="ler">Ler</button>
+    </div>
+
+    <!-- GERAR QR CODE -->
+    <div class="tab-content active" id="tab-gerar">
         <div class="input-group">
-            <input type="url" id="link-input" placeholder="Cole seu link (URL) aqui..." required>
+            <input type="url" id="link-input" placeholder="Cole seu link (URL) aqui...">
             <button id="gerar-btn">Gerar QR Code</button>
         </div>
-        
         <div class="qrcode-area">
             <div id="qrcode">
                 <p class="placeholder-text">Seu código aparecerá aqui.</p>
             </div>
-            
-            <button id="download-btn" onclick="downloadQRCode()">Baixar QR Code (PNG)</button>
+            <button id="download-btn" onclick="downloadQRCode()">Baixar QR Code</button>
         </div>
     </div>
 
-    <script>
-        // -----------------------------------------------------
-        // LÓGICA JAVASCRIPT
-        // -----------------------------------------------------
-        const htmlElement = document.documentElement;
-        const themeToggle = document.getElementById('checkbox');
-        const inputLink = document.getElementById('link-input');
-        const gerarBtn = document.getElementById('gerar-btn');
-        const qrCodeDiv = document.getElementById('qrcode');
-        const downloadBtn = document.getElementById('download-btn');
+    <!-- LER QR CODE -->
+    <div class="tab-content" id="tab-ler">
+        <div class="input-group">
+            <input type="file" id="file-input" accept="image/*">
+            <button id="ler-btn">Ler QR Code</button>
+        </div>
+        <div class="reader-area">
+            <img id="preview-img" style="max-width:200px; display:none; border-radius:8px;">
+            <p id="decoded-text" class="placeholder-text">Nenhum QR Code lido ainda.</p>
+        </div>
+    </div>
+</div>
 
-        // FUNÇÕES DE TEMA
-        // ---------------------------------
-        function applyTheme(theme) {
-            htmlElement.setAttribute('data-theme', theme);
-            // Salva a preferência no armazenamento local (localStorage)
-            localStorage.setItem('theme', theme);
-        }
+<script>
+    const htmlEl = document.documentElement;
+    const themeToggle = document.getElementById('checkbox');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        htmlEl.setAttribute('data-theme', savedTheme);
+        themeToggle.checked = savedTheme === 'dark';
+    }
+    themeToggle.addEventListener('change', () => {
+        const theme = themeToggle.checked ? 'dark' : 'light';
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    });
 
-        // Verifica a preferência do usuário ao carregar a página
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            applyTheme(savedTheme);
-            themeToggle.checked = savedTheme === 'dark';
-        }
-
-        // Evento para mudar o tema
-        themeToggle.addEventListener('change', () => {
-            if (themeToggle.checked) {
-                applyTheme('dark');
-            } else {
-                applyTheme('light');
-            }
+    // Tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
         });
+    });
 
+    // Gerar QR Code
+    const inputLink = document.getElementById('link-input');
+    const gerarBtn = document.getElementById('gerar-btn');
+    const qrCodeDiv = document.getElementById('qrcode');
+    const downloadBtn = document.getElementById('download-btn');
 
-        // FUNÇÃO PRINCIPAL PARA GERAR O QR CODE
-        // ---------------------------------
-        function gerarQRCode() {
-            const link = inputLink.value.trim();
+    function gerarQRCode() {
+        const link = inputLink.value.trim();
+        if (!link) return alert("Insira um link válido!");
+        qrCodeDiv.innerHTML = "";
+        new QRCode(qrCodeDiv, { text: link, width: 256, height: 256 });
+        setTimeout(() => downloadBtn.style.display = 'block', 100);
+    }
 
-            if (link === "") {
-                alert("Por favor, insira um link (URL) válido.");
-                inputLink.focus();
-                return;
-            }
+    function downloadQRCode() {
+        const canvas = qrCodeDiv.querySelector('canvas');
+        if (!canvas) return alert("Gere o QR Code primeiro.");
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL("image/png");
+        a.download = 'qrcode.png';
+        a.click();
+    }
 
-            // 1. Limpa e Oculta
-            qrCodeDiv.innerHTML = "";
-            downloadBtn.style.display = 'none';
+    gerarBtn.addEventListener('click', gerarQRCode);
+    inputLink.addEventListener('keydown', e => { if (e.key === 'Enter') gerarQRCode(); });
 
-            // 2. Cria o novo QR Code
-            new QRCode(qrCodeDiv, {
-                text: link,
-                width: 256,
-                height: 256,
-                // Garantimos que as cores sejam preto e branco puro para o código (melhor leitura)
-                colorDark : "#000000",
-                colorLight : "#ffffff", 
-                correctLevel : QRCode.CorrectLevel.H
-            });
-            
-            // 3. Exibe o botão de download (com pequeno atraso)
-            setTimeout(() => {
-                downloadBtn.style.display = 'block';
-            }, 50); 
-        }
+    // Ler QR Code
+    const fileInput = document.getElementById('file-input');
+    const lerBtn = document.getElementById('ler-btn');
+    const previewImg = document.getElementById('preview-img');
+    const decodedText = document.getElementById('decoded-text');
 
-        // FUNÇÃO PARA BAIXAR O QR CODE
-        // ---------------------------------
-        function downloadQRCode() {
-            const canvas = qrCodeDiv.querySelector('canvas');
-
-            if (canvas) {
-                const dataURL = canvas.toDataURL("image/png");
-                
-                const a = document.createElement('a');
-                a.href = dataURL;
-                a.download = 'qrcode_link.png'; 
-                
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            } else {
-                alert("Erro ao tentar baixar. Por favor, gere o código primeiro.");
-            }
-        }
-
-        // Adiciona eventos
-        gerarBtn.addEventListener('click', gerarQRCode);
-
-        inputLink.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); 
-                gerarQRCode();
-            }
-        });
-    </script>
+    lerBtn.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (!file) return alert("Selecione uma imagem com QR Code.");
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, canvas.width, canvas.height);
+                if (code) {
+                    decodedText.textContent = "🔗 " + code.data;
+                    decodedText.style.color = "var(--success-color)";
+                } else {
+                    decodedText.textContent = "❌ Nenhum QR Code detectado.";
+                    decodedText.style.color = "tomato";
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
 </body>
 </html>
