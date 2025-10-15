@@ -4,57 +4,84 @@
 <meta charset="UTF-8">
 <link rel="icon" href="logo.png" type="image/png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QR Code Pro</title>
+<title>QR Code Pro - Gerar, Ler e Pix</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
 <style>
+/* Estilos CSS (AJUSTADOS) */
 :root {
-    --primary-color: #5B6DEE;
-    --secondary-color: #3f51b5; 
-    --success-color: #28a745;
-    --error-color: tomato;
-    --text-color-light: #f0f4f8; 
+--primary-color: #5B6DEE;
+--secondary-color: #3f51b5;
+--success-color: #28a745;
+--error-color: tomato;
+--text-color-light: #f0f4f8;
 }
 [data-theme="light"] {
-    --background-color: #f0f4f8;
-    --card-background: #ffffff;
-    --text-color: #333333;
-    --input-border: #ddd;
-    --placeholder-color: #999;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    --dashed-border: #cccccc;
+--background-color: #f0f4f8;
+--card-background: #ffffff;
+--text-color: #333333;
+--input-border: #ddd;
+--placeholder-color: #999;
+--shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+--dashed-border: #cccccc;
 }
 [data-theme="dark"] {
-    --background-color: #1a1a2e;
-    --card-background: #232946;
-    --text-color: var(--text-color-light);
-    --input-border: #4f5a89;
-    --placeholder-color: #a0a8c2;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    --dashed-border: #4f5a89;
+--background-color: #1a1a2e;
+--card-background: #232946;
+--text-color: var(--text-color-light);
+--input-border: #4f5a89;
+--placeholder-color: #a0a8c2;
+--shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+--dashed-border: #4f5a89;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
 body { background-color: var(--background-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 .container { background-color: var(--card-background); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); width: 100%; max-width: 480px; text-align: center; position: relative; }
-h1 { color: var(--primary-color); margin-bottom: 25px; font-size: 2em; font-weight: 700; }
-.tabs { display: flex; justify-content: center; margin-bottom: 25px; gap: 10px; }
+
+/* AJUSTE: Margem do título reduzida */
+h1 { color: var(--primary-color); /* Ajuste: Reduzido de 25px */ font-size: 2em; font-weight: 700; }
+
+/* AJUSTE: Margem das abas reduzida */
+.tabs { display: flex; justify-content: center;  /* Ajuste: Reduzido de 25px */ gap: 3px; }
+
 .tab-btn { background: none; border: 2px solid var(--primary-color); border-radius: 8px; padding: 10px 18px; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: all 0.3s; }
 .tab-btn.active { background-color: var(--primary-color); color: var(--text-color-light); }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-.input-group { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
-#link-input, #file-input { padding: 12px; border: 2px solid var(--input-border); border-radius: 8px; font-size: 1em; width: 100%; background-color: var(--card-background); color: var(--text-color); }
-#link-input::placeholder { color: var(--placeholder-color); }
-#gerar-btn, #ler-btn { background-color: var(--primary-color); color: var(--text-color-light); padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: 600; transition: background-color 0.3s, transform 0.1s; }
-#gerar-btn:hover, #ler-btn:hover { background-color: var(--secondary-color); }
-#error-msg { color: var(--error-color); margin-bottom: 10px; display: none; font-weight: 600; }
-#download-btn { background-color: var(--success-color); color: var(--text-color-light); padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: none; }
-#download-btn:hover { background-color: #1e7e34; }
-.qrcode-area, .reader-area { border: 1px dashed var(--dashed-border); border-radius: 10px; padding: 20px; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
+.input-group { display: flex; flex-direction: column; gap: 4px; }
+
+/* Estilo unificado para inputs (Link, File e Pix) e Select */
+#link-input, #file-input, .pix-input, #tipo-chave { 
+    padding: 12px; border: 2px solid var(--input-border); border-radius: 8px; font-size: 1em; width: 100%; 
+    background-color: var(--card-background); color: var(--text-color); 
+}
+#link-input::placeholder, .pix-input::placeholder { color: var(--placeholder-color); }
+
+/* Estilo unificado para botões de ação */
+#gerar-btn, #ler-btn, #gerar-pix-btn { 
+    background-color: var(--primary-color); color: var(--text-color-light); padding: 12px; border: none; 
+    border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: 600; transition: background-color 0.3s, transform 0.1s; 
+}
+#gerar-btn:hover, #ler-btn:hover, #gerar-pix-btn:hover { background-color: var(--secondary-color); }
+
+/* Estilo unificado para mensagens de erro */
+.error-msg { color: var(--error-color); margin-bottom: 10px; display: none; font-weight: 600; }
+
+/* Estilo unificado para botões de download */
+#download-btn, #download-pix-btn { 
+    background-color: var(--success-color); color: var(--text-color-light); padding: 10px 15px; border: none; 
+    border-radius: 6px; cursor: pointer; font-weight: 600; display: none; margin-top: 10px; 
+}
+#download-btn:hover, #download-pix-btn:hover { background-color: #1e7e34; }
+
+/* Estilo unificado para áreas de exibição */
+.qrcode-area, .reader-area, .qrcode-pix-area { border: 1px dashed var(--dashed-border); border-radius: 10px; padding: 20px; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 .placeholder-text { color: var(--placeholder-color); font-style: italic; }
+
+/* Theme Toggle */
 .theme-toggle-container { position: absolute; top: 15px; right: 15px; }
 .theme-switch { display: inline-block; height: 20px; position: relative; width: 40px; }
 .theme-switch input { display: none; }
@@ -70,76 +97,216 @@ input:checked + .slider:before { transform: translateX(20px); }
 <body>
 
 <div class="container">
-    <div class="theme-toggle-container">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox">
-            <div class="slider round"></div>
-        </label>
-    </div>
+    <div class="theme-toggle-container">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox">
+            <div class="slider round"></div>
+        </label>
+    </div>
 
-    <h1>QR Code Pro</h1>
+    <h1>QR Code Pro</h1>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="gerar">Gerar</button>
-        <button class="tab-btn" data-tab="ler">Ler</button>
-    </div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="gerar">Link</button>
+        <button class="tab-btn" data-tab="ler">Ler</button>
+        <button class="tab-btn" data-tab="pix">Pix</button>
+    </div>
 
-    <!-- GERAR QR CODE -->
-    <div class="tab-content active" id="tab-gerar">
-        <div class="input-group">
-            <input type="url" id="link-input" placeholder="Cole seu link (URL) aqui...">
-            <p id="error-msg-gerar" class="error-msg"></p>
-            <button id="gerar-btn">Gerar QR Code</button>
-        </div>
-        <div class="qrcode-area">
-            <div id="qrcode">
-                <p class="placeholder-text">Seu código aparecerá aqui.</p>
-            </div>
-            <button id="download-btn" onclick="downloadQRCode()">Baixar QR Code</button>
-        </div>
-    </div>
+        <div class="tab-content active" id="tab-gerar">
+        <div class="input-group">
+            <input type="url" id="link-input" placeholder="Cole seu link (URL) aqui...">
+            <p id="error-msg-gerar" class="error-msg"></p>
+            <button id="gerar-btn">Gerar QR Code</button>
+        </div>
+        <div class="qrcode-area">
+            <div id="qrcode">
+                <p class="placeholder-text">Seu código aparecerá aqui.</p>
+            </div>
+            <button id="download-btn" onclick="downloadQRCode('qrcode', 'qrcode_link.png', 'error-msg-gerar')">Baixar QR Code</button>
+        </div>
+    </div>
 
-    <!-- LER QR CODE -->
-    <div class="tab-content" id="tab-ler">
-        <div class="input-group">
-            <input type="file" id="file-input" accept="image/*">
-            <p id="error-msg-ler" class="error-msg"></p>
-            <button id="ler-btn">Ler QR Code</button>
-        </div>
-        <div class="reader-area">
-            <img id="preview-img" style="max-width:200px; display:none; border-radius:8px;">
-            <p id="decoded-text" class="placeholder-text">Nenhum QR Code lido ainda.</p>
-        </div>
-    </div>
+        <div class="tab-content" id="tab-ler">
+        <div class="input-group">
+            <input type="file" id="file-input" accept="image/*">
+            <p id="error-msg-ler" class="error-msg"></p>
+            <button id="ler-btn">Ler QR Code</button>
+        </div>
+        <div class="reader-area">
+            <img id="preview-img" style="max-width:200px; display:none; border-radius:8px;">
+            <p id="decoded-text" class="placeholder-text">Nenhum QR Code lido ainda.</p>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="tab-pix">
+        <div class="input-group">
+            <select id="tipo-chave" class="pix-input">
+                <option value="" disabled selected>Selecione o Tipo de Chave *</option>
+                <option value="cpf">CPF (somente números)</option>
+                <option value="cnpj">CNPJ (somente números)</option>
+                <option value="email">E-mail</option>
+                <option value="celular">Celular (Ex: +5511987654321)</option>
+                <option value="evp">Chave Aleatória (EVP)</option>
+            </select>
+            <input type="text" id="chave-pix-input" class="pix-input" placeholder="Chave Pix (obrigatório) *">
+            <input type="text" id="valor-pix-input" class="pix-input" placeholder="Valor (opcional, Ex: 10.50)">
+            <p id="error-msg-pix" class="error-msg"></p>
+            <button id="gerar-pix-btn">Gerar QR Code Pix</button>
+        </div>
+        <div class="qrcode-pix-area">
+            <div id="qrcode-pix">
+                <p class="placeholder-text">Seu QR Code Pix aparecerá aqui.</p>
+            </div>
+            <button id="download-pix-btn" onclick="downloadQRCode('qrcode-pix', 'qrcode_pix.png', 'error-msg-pix')">Baixar QR Code Pix</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
+// --- UTILS PIX ---
+
+/**
+ * Função para calcular o CRC16/CCITT-CITT (usado no Pix).
+ */
+function crc16(payload) {
+    let polynomial = 0x1021;
+    let result = 0xFFFF;
+    for (let i = 0; i < payload.length; i++) {
+        result ^= (payload.charCodeAt(i) << 8);
+        for (let j = 0; j < 8; j++) {
+            if ((result & 0x8000) !== 0) {
+                result = (result << 1) ^ polynomial;
+            } else {
+                result <<= 1;
+            }
+        }
+    }
+    return (result & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+}
+
+/**
+ * Função para formatar o TLV (Tag-Length-Value).
+ */
+function tlv(id, value) {
+    if (!value) return '';
+    const length = value.length.toString().padStart(2, '0');
+    return id + length + value;
+}
+
+/**
+ * Gera o payload (string) Pix Estático BR Code simplificado.
+ */
+function gerarPayloadPix(chave, tipoChave, valor) {
+    
+    // PLACEHOLDERS FIXOS para campos obrigatórios do padrão BR Code
+    const NOME_RECEBEDOR_FIXO = 'RECEBEDOR PIX SIMPLES';
+    const CIDADE_RECEBEDOR_FIXA = 'SAO PAULO';
+    const TXID_FIXO = '***'; 
+
+    let chaveFormatada = chave;
+    if (tipoChave === 'celular' && !chaveFormatada.startsWith('+')) {
+        chaveFormatada = '+55' + chaveFormatada.replace(/\D/g, ''); 
+    } else if (tipoChave === 'cpf' || tipoChave === 'cnpj') {
+        chaveFormatada = chaveFormatada.replace(/\D/g, ''); 
+    }
+
+    const payloadFormatIndicator = tlv('00', '01'); 
+    const pointOfInitiationMethod = tlv('01', '12'); 
+
+    let merchantAccountInformation = '';
+    merchantAccountInformation += tlv('00', 'BR.GOV.BCB.PIX'); 
+    merchantAccountInformation += tlv('01', chaveFormatada);    
+    const maiLength = merchantAccountInformation.length.toString().padStart(2, '0');
+    merchantAccountInformation = '26' + maiLength + merchantAccountInformation;
+
+    const merchantCategoryCode = tlv('52', '0000'); 
+    const transactionCurrency = tlv('53', '986'); 
+    
+    let transactionAmount = '';
+    if (valor && parseFloat(valor) > 0) {
+        const valorFormatado = parseFloat(valor).toFixed(2); 
+        transactionAmount = tlv('54', valorFormatado); 
+    }
+    
+    const countryCode = tlv('58', 'BR'); 
+    const merchantName = tlv('59', NOME_RECEBEDOR_FIXO); 
+    const merchantCity = tlv('60', CIDADE_RECEBEDOR_FIXA); 
+    
+    let additionalDataField = '';
+    additionalDataField += tlv('05', TXID_FIXO); 
+    const adfLength = additionalDataField.length.toString().padStart(2, '0');
+    additionalDataField = '62' + adfLength + additionalDataField;
+
+    let payload = 
+        payloadFormatIndicator +
+        pointOfInitiationMethod +
+        merchantAccountInformation +
+        merchantCategoryCode +
+        transactionCurrency +
+        transactionAmount +
+        countryCode +
+        merchantName +
+        merchantCity +
+        additionalDataField;
+
+    const crc = crc16(payload + '6304'); 
+    const crcField = '6304' + crc;
+
+    return payload + crcField;
+}
+
+
+// --- LÓGICA GERAL DO APP ---
+
+// Tema (dark/light)
 const htmlEl = document.documentElement;
 const themeToggle = document.getElementById('checkbox');
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
-    htmlEl.setAttribute('data-theme', savedTheme);
-    themeToggle.checked = savedTheme === 'dark';
+    htmlEl.setAttribute('data-theme', savedTheme);
+    themeToggle.checked = savedTheme === 'dark';
 }
 themeToggle.addEventListener('change', () => {
-    const theme = themeToggle.checked ? 'dark' : 'light';
-    htmlEl.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    const theme = themeToggle.checked ? 'dark' : 'light';
+    htmlEl.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
 });
 
-// Tabs
+// Controle de Abas
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
 tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    });
+    btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
 });
 
-// Gerar QR Code
+// Função de Download
+function downloadQRCode(divId, filename, errorId) {
+    const qrCodeDiv = document.getElementById(divId);
+    const canvas = qrCodeDiv.querySelector('canvas');
+    const errorEl = document.getElementById(errorId);
+    
+    if (!canvas) {
+        errorEl.textContent = "❌ Gere o QR Code primeiro.";
+        errorEl.style.display = 'block';
+        return;
+    }
+    errorEl.style.display = 'none';
+    
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL("image/png");
+    a.download = filename;
+    a.click();
+}
+
+
+// --- 1. ABA GERAR QR CODE (LINK) ---
+
 const inputLink = document.getElementById('link-input');
 const gerarBtn = document.getElementById('gerar-btn');
 const qrCodeDiv = document.getElementById('qrcode');
@@ -147,36 +314,26 @@ const downloadBtn = document.getElementById('download-btn');
 const errorGerar = document.getElementById('error-msg-gerar');
 
 function gerarQRCode() {
-    const link = inputLink.value.trim();
-    if (!link) {
-        errorGerar.textContent = "❌ Insira um link válido!";
-        errorGerar.style.display = 'block';
-        return;
-    }
-    errorGerar.style.display = 'none';
-    qrCodeDiv.innerHTML = "";
-    new QRCode(qrCodeDiv, { text: link, width: 256, height: 256 });
-    setTimeout(() => downloadBtn.style.display = 'block', 100);
-}
-
-function downloadQRCode() {
-    const canvas = qrCodeDiv.querySelector('canvas');
-    if (!canvas) {
-        errorGerar.textContent = "❌ Gere o QR Code primeiro.";
-        errorGerar.style.display = 'block';
-        return;
-    }
-    errorGerar.style.display = 'none';
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL("image/png");
-    a.download = 'qrcode.png';
-    a.click();
+    const link = inputLink.value.trim();
+    if (!link) {
+        errorGerar.textContent = "❌ Insira um link válido!";
+        errorGerar.style.display = 'block';
+        downloadBtn.style.display = 'none';
+        qrCodeDiv.innerHTML = '<p class="placeholder-text">Seu código aparecerá aqui.</p>';
+        return;
+    }
+    errorGerar.style.display = 'none';
+    qrCodeDiv.innerHTML = "";
+    new QRCode(qrCodeDiv, { text: link, width: 256, height: 256 });
+    setTimeout(() => downloadBtn.style.display = 'block', 100);
 }
 
 gerarBtn.addEventListener('click', gerarQRCode);
 inputLink.addEventListener('keydown', e => { if (e.key === 'Enter') gerarQRCode(); });
 
-// Ler QR Code
+
+// --- 2. ABA LER QR CODE ---
+
 const fileInput = document.getElementById('file-input');
 const lerBtn = document.getElementById('ler-btn');
 const previewImg = document.getElementById('preview-img');
@@ -184,38 +341,110 @@ const decodedText = document.getElementById('decoded-text');
 const errorLer = document.getElementById('error-msg-ler');
 
 lerBtn.addEventListener('click', async () => {
-    const file = fileInput.files[0];
-    if (!file) {
-        errorLer.textContent = "❌ Selecione uma imagem com QR Code.";
-        errorLer.style.display = 'block';
-        return;
-    }
-    errorLer.style.display = 'none';
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            previewImg.src = e.target.result;
-            previewImg.style.display = 'block';
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, canvas.width, canvas.height);
-            if (code) {
-                decodedText.textContent = code.data;
-                decodedText.style.color = "var(--success-color)";
-            } else {
-                decodedText.textContent = "❌ Nenhum QR Code detectado.";
-                decodedText.style.color = "tomato";
-            }
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    const file = fileInput.files[0];
+    if (!file) {
+        errorLer.textContent = "❌ Selecione uma imagem com QR Code.";
+        errorLer.style.display = 'block';
+        decodedText.textContent = "Nenhum QR Code lido ainda.";
+        decodedText.style.color = "var(--placeholder-color)";
+        previewImg.style.display = 'none';
+        return;
+    }
+    errorLer.style.display = 'none';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height);
+            if (code) {
+                const isPix = code.data.startsWith('00020126') && code.data.includes('BR.GOV.BCB.PIX');
+                decodedText.textContent = isPix ? "✅ PIX BR Code LIDO! Conteúdo: " + code.data : "🔗 Conteúdo: " + code.data;
+                decodedText.style.color = "var(--success-color)";
+            } else {
+                decodedText.textContent = "❌ Nenhum QR Code detectado.";
+                decodedText.style.color = "tomato";
+            }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 });
+
+
+// --- 3. ABA GERAR QR CODE PIX ---
+
+const tipoChaveSelect = document.getElementById('tipo-chave');
+const chavePixInput = document.getElementById('chave-pix-input');
+const valorPixInput = document.getElementById('valor-pix-input');
+const gerarPixBtn = document.getElementById('gerar-pix-btn');
+const qrCodePixDiv = document.getElementById('qrcode-pix');
+const downloadPixBtn = document.getElementById('download-pix-btn');
+const errorPix = document.getElementById('error-msg-pix');
+
+gerarPixBtn.addEventListener('click', () => {
+    const tipoChave = tipoChaveSelect.value;
+    const chave = chavePixInput.value.trim();
+    const valor = valorPixInput.value.trim().replace(',', '.'); 
+
+    // Validação OBRIGATÓRIA (Tipo e Chave)
+    if (!tipoChave || !chave) {
+        errorPix.textContent = "❌ O Tipo de Chave e a Chave Pix são obrigatórios!";
+        errorPix.style.display = 'block';
+        downloadPixBtn.style.display = 'none';
+        qrCodePixDiv.innerHTML = '<p class="placeholder-text">Seu QR Code Pix aparecerá aqui.</p>';
+        return;
+    }
+    
+    // Validação do Valor (se preenchido)
+    if (valor && (isNaN(parseFloat(valor)) || parseFloat(valor) < 0)) {
+        errorPix.textContent = "❌ Valor inválido. Use o formato N.NN (Ex: 10.50)";
+        errorPix.style.display = 'block';
+        downloadPixBtn.style.display = 'none';
+        qrCodePixDiv.innerHTML = '<p class="placeholder-text">Seu QR Code Pix aparecerá aqui.</p>';
+        return;
+    }
+
+    try {
+        const payloadPix = gerarPayloadPix(chave, tipoChave, valor);
+        
+        errorPix.style.display = 'none';
+        qrCodePixDiv.innerHTML = "";
+        
+        // Gera o QR Code
+        new QRCode(qrCodePixDiv, { 
+            text: payloadPix, 
+            width: 256, 
+            height: 256, 
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.M 
+        });
+        
+        setTimeout(() => downloadPixBtn.style.display = 'block', 100);
+
+    } catch(e) {
+        console.error("Erro ao gerar Pix:", e);
+        errorPix.textContent = "❌ Erro inesperado ao gerar o QR Code Pix.";
+        errorPix.style.display = 'block';
+        downloadPixBtn.style.display = 'none';
+        qrCodePixDiv.innerHTML = '<p class="placeholder-text">Seu QR Code Pix aparecerá aqui.</p>';
+    }
+
+});
+
+// Garante que o input de valor aceite apenas números e ponto/vírgula
+valorPixInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/[^0-9.,]/g, '');
+});
+
 </script>
 </body>
 </html>
