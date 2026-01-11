@@ -21,4 +21,3 @@ Você pode testar o Gerador de QR Code diretamente online através do link do Ne
 * **Temas Dinâmicos:** Possui um **Modo Light** e um **Modo Dark** com chave de troca (`toggle`) para uma melhor experiência de visualização.
 * **Tecnologia:** Utiliza a biblioteca `qrcode.js` para a codificação.
 
-s
