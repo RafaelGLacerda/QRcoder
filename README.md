@@ -10,7 +10,7 @@ O gerador permite que você insira qualquer URL ou texto e crie um QR Code insta
 
 Você pode testar o Gerador de QR Code diretamente online através do link do Netlify:
 
-👉 **[https://qrcodesgerador.netlify.app/](https://qrcodesgerador.netlify.app/)**
+👉 **[https://qrcodesgerador.netlify.app/](https://qrcodesgenerator.onrender.com/)**
 
 ---
 
